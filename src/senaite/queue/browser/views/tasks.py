@@ -23,11 +23,11 @@ from operator import itemgetter
 import collections
 from datetime import datetime
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from senaite.core.listing import ListingView
+from senaite.app.listing.view import ListingView
 from senaite.queue import api as qapi
 from senaite.queue import messageFactory as _
 from senaite.queue.queue import get_max_retries
-from zope.component.interfaces import implements
+from zope.interface.declarations import implements
 
 from bika.lims import api
 from bika.lims.browser.workflow import RequestContextAware

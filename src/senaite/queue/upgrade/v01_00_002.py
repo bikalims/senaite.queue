@@ -30,8 +30,8 @@ from zope.interface import noLongerProvides
 
 from bika.lims import api as _api
 from bika.lims.interfaces import IWorksheet
-from bika.lims.upgrade import upgradestep
-from bika.lims.upgrade.utils import UpgradeUtils
+from senaite.core.upgrade import upgradestep
+from senaite.core.upgrade.utils import UpgradeUtils
 
 version = "1.0.2"
 
