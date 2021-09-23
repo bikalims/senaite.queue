@@ -82,7 +82,11 @@ def _apply_worksheet_template_routine_analyses(self, wst):
 
     for analysis in analyses:
         sample_id = analysis.getRequestID
-        sample_uid = analysis.getParentUID
+        try:
+            sample_uid = analysis.getParentUID
+        except Exception as e:
+            sample_uid = _api.get_object(analysis).aq_parent.UID()
+
         if len(available_slots) == 0:
             # No slots available. Skip this analysis unless it belongs to a
             # sample with an allocated slot
