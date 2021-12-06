@@ -21,6 +21,14 @@
 from Acquisition import aq_base  # noqa
 from collections import OrderedDict
 from plone.memoize import ram
+from senaite.api import get_id
+from senaite.api import get_object
+from senaite.api import get_object_by_uid
+from senaite.api import get_parent
+from senaite.api import get_path
+from senaite.api import get_portal
+from senaite.api import get_registry_record
+from senaite.api import get_uid
 from senaite.queue import is_installed
 from senaite.queue.interfaces import IClientQueueUtility
 from senaite.queue.interfaces import IQueuedTaskAdapter
@@ -32,15 +40,14 @@ from six.moves.urllib import parse
 from zope.component import getUtility
 from zope.component import queryAdapter
 
-from bika.lims import api as _api
 from bika.lims.interfaces import IWorksheet
 
 
 def get_server_url():
     """Returns the url of the queue server if valid. None otherwise.
     """
-    url = _api.get_registry_record("senaite.queue.server")
     try:
+        url = get_registry_record("senaite.queue.server")
         result = parse.urlparse(url)
     except:  # noqa a convenient way to check if the url is valid
         return None
@@ -120,7 +127,7 @@ def is_queued(brain_object_uid, status=None):
     if not is_queue_enabled():
         return False
 
-    uid = _api.get_uid(brain_object_uid)
+    uid = get_uid(brain_object_uid)
     return uid in get_queue().get_uids(status=status)
 
 
@@ -153,13 +160,13 @@ def add_task(name, context, **kwargs):
         if name.startswith(action_prefix):
             kwargs.update({
                 "action": name[len(action_prefix):],
-                "uids": kwargs.get("uids", [_api.get_uid(context)])
+                "uids": kwargs.get("uids", [get_uid(context)])
             })
             return add_task("task_generic_action", context, **kwargs)
 
         raise ValueError(
             "No IQueuedTaskAdapter for task '{}' and context '{}'".format(
-                name, _api.get_path(context)
+                name, get_path(context)
             )
         )
 
@@ -183,12 +190,12 @@ def add_action_task(brain_object_uid, action, context=None, **kwargs):
         brain_object_uid = [brain_object_uid]
 
     # Remove empties and duplicates while keeping the order
-    uids = filter(None, map(_api.get_uid, brain_object_uid))
+    uids = filter(None, map(get_uid, brain_object_uid))
     uids = list(OrderedDict.fromkeys(uids))
     if not uids:
         return None
 
-    context = context or _api.get_portal()
+    context = context or get_portal()
 
     # Special case for "assign" action
     if action == "assign" and IWorksheet.providedBy(context):
@@ -212,7 +219,7 @@ def add_assign_task(worksheet, analyses, slots=None, **kwargs):
     :rtype: senaite.queue.queue.QueueTask
     """
     kwargs.update({
-        "uids": map(_api.get_uid, analyses),
+        "uids": map(get_uid, analyses),
         "slots": slots or [],
     })
     return add_task("task_assign_analyses", worksheet, **kwargs)
@@ -242,7 +249,7 @@ def add_reindex_obj_security_task(brain_object_uid, **kwargs):
             if len(previous) >= max:
                 return previous
 
-        previous.append(_api.get_uid(obj))
+        previous.append(get_uid(obj))
         return previous[:max]
 
     def walk_up(obj, max=10, previous=None):
@@ -252,14 +259,14 @@ def add_reindex_obj_security_task(brain_object_uid, **kwargs):
         if len(previous) >= max:
             return previous
 
-        previous.append(_api.get_uid(obj))
+        previous.append(get_uid(obj))
 
         # Navigate to parent node
-        parent = _api.get_parent(obj)
+        parent = get_parent(obj)
 
         # Check if this parent node has children not yet processed
         ids = parent.objectIds()
-        obj_id = _api.get_id(obj)
+        obj_id = get_id(obj)
         obj_idx = ids.index(obj_id)
         if obj_idx > 0:
             # Current obj is not the oldest. Extract the items to process from
@@ -275,19 +282,19 @@ def add_reindex_obj_security_task(brain_object_uid, **kwargs):
         return previous[:max]
 
     # Get the object
-    obj = _api.get_object(brain_object_uid)
-    obj_uid = _api.get_uid(obj)
+    obj = get_object(brain_object_uid)
+    obj_uid = get_uid(obj)
 
     chunk_size = kwargs.get("chunk_size", 10)
     top_uid = kwargs.get("top_uid")
     if not top_uid:
         kwargs.update({
-            "top_uid": _api.get_uid(obj)
+            "top_uid": get_uid(obj)
         })
 
         # Pick the newest and deepest leaf
         leaves = walk_down(obj, max=1) or [obj_uid]
-        obj = _api.get_object_by_uid(leaves[0])
+        obj = get_object_by_uid(leaves[0])
 
     # We assume obj is the last deepest object not yet processed, extract the
     # next objects to process that are above this obj from the tree hierarchy
