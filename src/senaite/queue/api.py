@@ -40,6 +40,7 @@ from six.moves.urllib import parse
 from zope.component import getUtility
 from zope.component import queryAdapter
 
+from bika.lims import api as _api
 from bika.lims.interfaces import IWorksheet
 
 
@@ -252,7 +253,7 @@ def add_reindex_obj_security_task(brain_object_uid, **kwargs):
         previous.append(get_uid(obj))
         return previous[:max]
 
-    def walk_up(obj, max=10, previous=None):
+    def walk_up(obj, top_obj_uid, max=10, previous=None):
         if previous is None:
             previous = []
 
@@ -278,7 +279,12 @@ def add_reindex_obj_security_task(brain_object_uid, **kwargs):
                 if len(previous) >= max:
                     return previous
 
-        previous = walk_up(parent, max=max, previous=previous)
+        parent_uid = _api.get_uid(parent)
+        root_uid = _api.get_uid(top_obj_uid)
+        if parent_uid != root_uid:
+            # We haven't arrived to the top of the hierarchy yet
+            previous = walk_up(parent, top_uid, max=max, previous=previous)
+
         return previous[:max]
 
     # Get the object
@@ -288,8 +294,9 @@ def add_reindex_obj_security_task(brain_object_uid, **kwargs):
     chunk_size = kwargs.get("chunk_size", 10)
     top_uid = kwargs.get("top_uid")
     if not top_uid:
+        top_uid = _api.get_uid(obj)
         kwargs.update({
-            "top_uid": get_uid(obj)
+            "top_uid": top_uid
         })
 
         # Pick the newest and deepest leaf
@@ -298,7 +305,7 @@ def add_reindex_obj_security_task(brain_object_uid, **kwargs):
 
     # We assume obj is the last deepest object not yet processed, extract the
     # next objects to process that are above this obj from the tree hierarchy
-    uids = walk_up(obj, max=chunk_size)
+    uids = walk_up(obj, top_uid, max=chunk_size)
 
     task_name = "task_reindex_object_security"
     kwargs.update({
