@@ -23,7 +23,7 @@ from Acquisition import aq_base
 from senaite.queue import api
 
 
-def _recursive_reindex_object_security(self, obj):
+def _recursive_reindex_object(self, obj):
     """Reindex object security recursively, but using the queue
     """
     if api.is_queue_ready("task_reindex_object_security"):

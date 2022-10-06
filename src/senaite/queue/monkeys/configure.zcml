@@ -31,8 +31,8 @@
   <monkey:patch
      description=""
      class="bika.lims.content.contact.Contact"
-     original="_recursive_reindex_object_security"
-     replacement=".content.contact._recursive_reindex_object_security"
+     original="_recursive_reindex_object"
+     replacement=".content.contact._recursive_reindex_object"
   />
 
 </configure>
