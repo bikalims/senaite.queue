@@ -127,7 +127,7 @@
   <subscriber
     for="bika.lims.browser.worksheet.views.AddAnalysesView
          bika.lims.interfaces.IWorksheet"
-    provides="senaite.core.listing.interfaces.IListingViewAdapter"
+    provides="senaite.app.listing.interfaces.IListingViewAdapter"
     factory=".listing.QueuedAddAnalysesViewAdapter"/>
 
   <!-- Queued analyses: Add Blank view from inside Worksheet.
@@ -135,7 +135,7 @@
   <subscriber
     for="bika.lims.browser.worksheet.views.AddBlankView
          bika.lims.interfaces.IWorksheet"
-    provides="senaite.core.listing.interfaces.IListingViewAdapter"
+    provides="senaite.app.listing.interfaces.IListingViewAdapter"
     factory=".listing.QueuedWorksheetAnalysesViewAdapter"/>
 
   <!-- Queued analyses: Add Control view from inside Worksheet.
@@ -143,7 +143,7 @@
   <subscriber
     for="bika.lims.browser.worksheet.views.AddControlView
          bika.lims.interfaces.IWorksheet"
-    provides="senaite.core.listing.interfaces.IListingViewAdapter"
+    provides="senaite.app.listing.interfaces.IListingViewAdapter"
     factory=".listing.QueuedWorksheetAnalysesViewAdapter"/>
 
   <!-- Queued analyses: Add Dulicate view from inside Worksheet.
@@ -151,7 +151,7 @@
   <subscriber
     for="bika.lims.browser.worksheet.views.AddDuplicateView
          bika.lims.interfaces.IWorksheet"
-    provides="senaite.core.listing.interfaces.IListingViewAdapter"
+    provides="senaite.app.listing.interfaces.IListingViewAdapter"
     factory=".listing.QueuedWorksheetAnalysesViewAdapter"/>
 
   <!-- Queued analyses: Generic Analyses View.
@@ -159,7 +159,7 @@
   <subscriber
     for="bika.lims.browser.analyses.view.AnalysesView
          zope.interface.Interface"
-    provides="senaite.core.listing.interfaces.IListingViewAdapter"
+    provides="senaite.app.listing.interfaces.IListingViewAdapter"
     factory=".listing.QueuedAnalysesViewAdapter"/>
 
   <!-- Queued analyses: Analyses from inside Worksheet.
@@ -167,15 +167,15 @@
   <subscriber
     for="bika.lims.browser.worksheet.views.AnalysesView
          bika.lims.interfaces.IWorksheet"
-    provides="senaite.core.listing.interfaces.IListingViewAdapter"
+    provides="senaite.app.listing.interfaces.IListingViewAdapter"
     factory=".listing.QueuedWorksheetAnalysesViewAdapter"/>
 
   <!-- Queued analyses: Manage Analyses view from inside Analysis Request.
   Queued analyses are disabled in listing -->
   <subscriber
-    for="bika.lims.browser.analysisrequest.manage_results.AnalysisRequestManageResultsView
+    for="bika.lims.browser.analysisrequest.add2.AnalysisRequestManageView
          bika.lims.interfaces.IAnalysisRequest"
-    provides="senaite.core.listing.interfaces.IListingViewAdapter"
+    provides="senaite.app.listing.interfaces.IListingViewAdapter"
     factory=".listing.QueuedAnalysesViewAdapter"/>
 
   <!-- Queued analyses: Add Analyses view from inside Analysis Request.
@@ -183,7 +183,7 @@
   <subscriber
     for="bika.lims.browser.analysisrequest.manage_analyses.AnalysisRequestAnalysesView
          bika.lims.interfaces.IAnalysisRequest"
-    provides="senaite.core.listing.interfaces.IListingViewAdapter"
+    provides="senaite.app.listing.interfaces.IListingViewAdapter"
     factory=".listing.QueuedSampleAnalysisServicesViewAdapter"/>
 
   <!-- Queued worksheets: Worksheets listing.
@@ -191,7 +191,7 @@
   <subscriber
     for="bika.lims.browser.worksheet.views.folder.FolderView
          bika.lims.interfaces.IWorksheetFolder"
-    provides="senaite.core.listing.interfaces.IListingViewAdapter"
+    provides="senaite.app.listing.interfaces.IListingViewAdapter"
     factory=".listing.QueuedWorksheetsViewAdapter"/>
 
   <!-- Samples listing: Disables the checkbox for queued samples and displays
@@ -199,7 +199,7 @@
   <subscriber
     for="bika.lims.browser.analysisrequest.analysisrequests.AnalysisRequestsView
          *"
-    provides="senaite.core.listing.interfaces.IListingViewAdapter"
+    provides="senaite.app.listing.interfaces.IListingViewAdapter"
     factory=".listing.QueuedSamplesViewAdapter" />
 
 </configure>

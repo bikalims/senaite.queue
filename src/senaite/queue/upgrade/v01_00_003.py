@@ -21,8 +21,8 @@
 from senaite.queue import logger
 from senaite.queue import PRODUCT_NAME
 
-from bika.lims.upgrade import upgradestep
-from bika.lims.upgrade.utils import UpgradeUtils
+from senaite.core.upgrade import upgradestep
+from senaite.core.upgrade.utils import UpgradeUtils
 
 version = "1.0.3"
 

@@ -18,8 +18,8 @@
 # Copyright 2019-2021 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
-from senaite.core.listing.interfaces import IListingView
-from senaite.core.listing.interfaces import IListingViewAdapter
+from senaite.app.listing.interfaces import IListingView
+from senaite.app.listing.interfaces import IListingViewAdapter
 from senaite.queue import api
 from senaite.queue import messageFactory as _
 from zope.component import adapts
